@@ -1,6 +1,7 @@
 package com.example.dktomaszenko.sqlite;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         String descripcion = et_descripcion.getText().toString();
         String precio = et_precio.getText().toString();
 
-        if(!codigo.isEmpty() && !descripcion.isEmpty() && precio.isEmpty()){
+        if(!codigo.isEmpty() && !descripcion.isEmpty() && !precio.isEmpty()){
             ContentValues registro = new ContentValues();
 
             registro.put("codigo", codigo);
@@ -46,6 +47,28 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             Toast.makeText(this, "Rellena todos los campos", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void Buscar(View view){
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "administracion", null, 1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+
+        String codigo = et_codigo.getText().toString();
+
+        if(!codigo.isEmpty()){
+            Cursor fila = db.rawQuery
+                    ("select descripcion, precio from articulos where codigo =" + codigo, null);
+
+            if(fila.moveToFirst()){
+                et_descripcion.setText(fila.getString(0));
+                et_precio.setText(fila.getString(1));
+                db.close();
+            } else {
+                Toast.makeText(this, "No se ha encontrado producto con este código.", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, "Debes introducir código", Toast.LENGTH_LONG).show();
         }
     }
 }
