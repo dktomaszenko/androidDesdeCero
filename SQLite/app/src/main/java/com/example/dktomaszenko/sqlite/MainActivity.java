@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             et_precio.setText("");
 
         } else {
-            Toast.makeText(this, "Rellena todos los campos", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Rellena todos los campos", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -65,10 +65,61 @@ public class MainActivity extends AppCompatActivity {
                 et_precio.setText(fila.getString(1));
                 db.close();
             } else {
-                Toast.makeText(this, "No se ha encontrado producto con este código.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "No se ha encontrado producto con este código.", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Debes introducir código", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Debes introducir código", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void Eliminar(View view){
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "administracion", null, 1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+
+        String codigo = et_codigo.getText().toString();
+
+        if(!codigo.isEmpty()){
+            int cantidad = db.delete("artuculos", "codigo=" + codigo, null);
+            db.close();
+
+            et_codigo.setText("");
+            et_descripcion.setText("");
+            et_precio.setText("");
+
+            if(cantidad == 1){
+                Toast.makeText(this, "Articulo eliminado", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "El articulo no existe", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Debes introducir código", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void modificar(View view){
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "administracion", null, 1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+
+        String codigo = et_codigo.getText().toString();
+        String descripcion = et_descripcion.getText().toString();
+        String precio = et_precio.getText().toString();
+
+        if(!codigo.isEmpty() && !descripcion.isEmpty() && !precio.isEmpty()){
+
+            ContentValues registro = new ContentValues();
+            registro.put("codigo", codigo);
+            registro.put("descripcion", descripcion);
+            registro.put("precio", precio);
+
+            int cantidad = db.update("articulos", registro, "codigo=" + codigo, null);
+            db.close();
+
+            if(cantidad == 1){
+                Toast.makeText(this, "El articulo ha sido modificado", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "El articulo no existe", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 }
