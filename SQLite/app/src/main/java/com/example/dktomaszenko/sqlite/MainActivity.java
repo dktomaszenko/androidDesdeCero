@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         String codigo = et_codigo.getText().toString();
 
         if(!codigo.isEmpty()){
-            int cantidad = db.delete("artuculos", "codigo=" + codigo, null);
+            int cantidad = db.delete("articulos", "codigo=" + codigo, null);
             db.close();
 
             et_codigo.setText("");
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void modificar(View view){
+    public void Modificar(View view){
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "administracion", null, 1);
         SQLiteDatabase db = admin.getWritableDatabase();
 
